@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista cumparaturi</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 5px; /* Adjust margin for larger spacing between boxes */
+        }
+
+        li {
+            width: 30%; /* Adjust the width as needed */
+            margin: 5px; /* Adjust margin for larger spacing between boxes */
+            padding: 60px; /* Adjust padding for larger boxes */
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            position: relative;
+            background-color: #f2f2ce;
+        }
+
+        li.cumparat {
+            background-color: #d3ffd3; /* Different background color for cumparat items */
+        }
+
+        img {
+            display: block;
+            margin: 0 auto 10px;
+            max-width: 100%; /* Ensure the image doesn't overflow its container */
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+
+<body>
+    {% load static %}
+
+    <h1>Lista cumparaturi</h1>
+    <ul>
+        {% for item in items %}
+        <li {% if item.cumparat %}class="cumparat"{% endif %}>
+            <strong>{{ item.denumire }}</strong> produs de {{ item.firma_producatoare }}<br />
+            Descriere: {{ item.descriere }}<br />
+            Greutate: {{ item.greutate }} g <br />
+            Pret: {{ item.pret }} <br />
+            Cumparat: {% if item.cumparat %}Da{% else %}Nu{% endif %}<br />
+            {% if not item.cumparat %}
+            <a href="{% url 'confirm_marcheaza_ca_achizitionat' item.pk %}">Marcheaza ca achizitionat</a>
+            {% endif %}
+            <br />
+
+            <img src="{% static item.filename %}" alt="{{ item.denumire }} imagine" /><br/>
+            <br />
+            <a href="{% url 'confirm_delete_item' item.pk %}">Sterge</a><br/>
+            <button type="submit" value={{item.denumire}} onclick="location.href='{% url 'get_nutritional_facts' item.pk %}'" name='mybtn2'>Get nutritional facts</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'adauga_item' %}">Adauga item nou</a>
+</body>
+</html>
